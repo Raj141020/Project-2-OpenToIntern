@@ -1,9 +1,11 @@
 const validation  = require("../Validation/validation"); 
 
 const college = require("../Models/collegeModel");
+
 const internModel = require("../Models/internModel");
 
-let { isEmpty, isValidCollegeName, isValidFCName} = validation //Destructuring
+
+let { isEmpty, isValidCollegeName,isValidFCName, isValidCollegeLogoLink} = validation //Destructuring
 
 const creatcollege = async function(req,res){
 
@@ -22,6 +24,7 @@ const creatcollege = async function(req,res){
 
     /*------------------------Checking attributes are empty or not-----------------------------------*/
 
+
     if(!isEmpty(name)){
         return res.status(400).send({status:false,message:"Name is required"})
     }
@@ -36,17 +39,26 @@ const creatcollege = async function(req,res){
     if(!isValidCollegeName(name)){ // College short name validation
         return res.status(400).send({status:false,message:"College name is Wrong"})
     }
-
+    
+    let collegeName = await college.findOne({name:name}) //Duplicate checking
+    if(collegeName){
+        return res.status(400).send({msg:"College Name already registered"})
+    }
 
     if(! isValidFCName(fullName)){ // College Full Name Validation
         return res.status(400).send({status:false,message:"Please provide valid full college name"})
     }
 
+    if(! isValidCollegeLogoLink(logoLink)){ // College Logo Link Validation
+        return res.status(400).send({status:false,message:"Please provide valid logo link"})
+    }
+
 
     /*-----------------------------------CREATING COLLEGE DATA----------------------------------------*/
 
+
     let collegeCreate = await college.create(data)
-    res.status(201).send({status:true,data:collegeCreate})
+    res.status(201).send({name:collegeCreate.name,fullName:collegeCreate.fullName,logoLink:collegeCreate.logoLink,isDeleted:collegeCreate.isDeleted})
     console.log(collegeCreate)
     }
     
@@ -59,6 +71,7 @@ module.exports.creatcollege = creatcollege
 
 
  /*-----------------------------------GETTING STUDENT LIST----------------------------------------*/
+
 
  const getlistofstudents = async function(req,res){
 
@@ -78,12 +91,16 @@ module.exports.creatcollege = creatcollege
         let getcollegeId = getCollegeName._id
         console.log(getcollegeId)
 
-        let getstudentList = await internModel.find({collegeId:getcollegeId,isDeleted:false})
+        let getstudentList = await internModel.find({collegeId:getcollegeId,isDeleted:false}).select({_id:1,name:1,email:1,mobile:1})
+        console.log(getstudentList)
         if(getstudentList.length == 0){
             return res.status(404).send({msg:`No student from ${data} is registered for Internship`})
         }
+
+        let collegeData = {name:getCollegeName.name,fullName:getCollegeName.fullName,logoLink:getCollegeName.logoLink}
+        console.log(collegeData)
          
-        res.send({data:getCollegeName,interns:getstudentList})
+        res.status(200).send({data:collegeData,interns:getstudentList})
 
     }
     catch(error){

@@ -2,7 +2,7 @@ const validation  = require("../Validation/validation");
 
 const intern = require("../Models/internModel");
 
-const college = require("../Models/collegeModel")
+const college = require("../Models/collegeModel");
 
 
 
@@ -46,9 +46,26 @@ const createIntern = async function(req,res){ // Checking body is empty or not
         return res.status(400).send({status:false,message:"Please provide valid Email"})
     }
 
+     let studentemail = await intern.findOne({email:email}) // Checking Duplicate Email
+     if(studentemail){
+        return res.status(400).send({msg:"Email already registered"})
+     }
+
+     /* Example of mobile valid Numbers  +919367788755
+                                         89898293041
+                                         918765431234
+                                         +16308520397
+                                         786-307-3615 
+                                         */
+
     if(! isValidStudentMobile(mobile)){ // Student mobile validation
         return res.status(400).send({status:false,message:"Please provide valid mobile number"})
     }
+
+    let studentMobile = await intern.findOne({mobile:mobile}) // Checking Duplicate Mobile No
+     if(studentMobile){
+        return res.status(400).send({msg:"Mobile Number already registered"})
+     }
 
      
      let getCollegeId = await college.findOne({name:data.collegeName})
@@ -63,11 +80,11 @@ const createIntern = async function(req,res){ // Checking body is empty or not
 
     let internCreate = await intern.create(data)
 
-    res.status(201).send({status:true,data:internCreate})
+    res.status(201).send({isDeleted:internCreate.isDeleted,name:internCreate.name,email:internCreate.email,mobile:internCreate.mobile,collegeId:internCreate.collegeId})
     console.log(internCreate)
     }
     catch(error){
-          res.status(500).send({status:true,message:error.message})
+          res.status(500).send({status:false,message:error.message})
     }
     
 }
