@@ -58,7 +58,7 @@ const creatcollege = async function(req,res){
 
 
     let collegeCreate = await college.create(data)
-    res.status(201).send({name:collegeCreate.name,fullName:collegeCreate.fullName,logoLink:collegeCreate.logoLink,isDeleted:collegeCreate.isDeleted})
+    res.status(201).send({status:true,data:{name:collegeCreate.name,fullName:collegeCreate.fullName,logoLink:collegeCreate.logoLink,isDeleted:collegeCreate.isDeleted}})
     console.log(collegeCreate)
     }
     
@@ -79,7 +79,7 @@ module.exports.creatcollege = creatcollege
 
         let data = req.query.collegeName
 
-        if(!data){
+         if(!data){
             return res.status(400).send({status:false,message:"Please provide college name in query"})
         }
 
@@ -99,8 +99,10 @@ module.exports.creatcollege = creatcollege
 
         let collegeData = {name:getCollegeName.name,fullName:getCollegeName.fullName,logoLink:getCollegeName.logoLink}
         console.log(collegeData)
+
+        collegeData.interns = getstudentList
          
-        res.status(200).send({data:collegeData,interns:getstudentList})
+        res.status(200).send({status:true,data:collegeData})
 
     }
     catch(error){

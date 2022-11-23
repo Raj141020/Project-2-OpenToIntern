@@ -80,7 +80,7 @@ const createIntern = async function(req,res){ // Checking body is empty or not
 
     let internCreate = await intern.create(data)
 
-    res.status(201).send({isDeleted:internCreate.isDeleted,name:internCreate.name,email:internCreate.email,mobile:internCreate.mobile,collegeId:internCreate.collegeId})
+    res.status(201).send({status:true,data:{isDeleted:internCreate.isDeleted,name:internCreate.name,email:internCreate.email,mobile:internCreate.mobile,collegeId:internCreate.collegeId}})
     console.log(internCreate)
     }
     catch(error){
