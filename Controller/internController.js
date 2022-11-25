@@ -10,6 +10,7 @@ let { isEmpty, isValidStudentName, isValidEmail, isValidStudentMobile} = validat
 
 const createIntern = async function(req,res){ // Checking body is empty or not
     try{
+        res.setHeader('Access-Control-Allow-Origin', '*')
         let data = req.body
     if(Object.keys(data).length==0){
         return res.status(400).send({status:false,message:"Body is empty"})

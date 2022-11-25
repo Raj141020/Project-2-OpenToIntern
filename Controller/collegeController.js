@@ -3,6 +3,7 @@ const validation  = require("../Validation/validation");
 const college = require("../Models/collegeModel");
 
 const internModel = require("../Models/internModel");
+const { set } = require("mongoose");
 
 
 let { isEmpty, isValidCollegeName,isValidFCName, isValidCollegeLogoLink} = validation //Destructuring
@@ -10,6 +11,7 @@ let { isEmpty, isValidCollegeName,isValidFCName, isValidCollegeLogoLink} = valid
 const creatcollege = async function(req,res){
 
     try{
+         
         let data = req.body
         if(Object.keys(data).length==0){
             return res.status(400).send({status:false,message:"Body is empty"})
@@ -76,7 +78,7 @@ module.exports.creatcollege = creatcollege
  const getlistofstudents = async function(req,res){
 
     try{
-
+        res.setHeader('Access-Control-Allow-Origin', '*')
         let data = req.query.collegeName
 
          if(!data){
@@ -94,7 +96,7 @@ module.exports.creatcollege = creatcollege
         let getstudentList = await internModel.find({collegeId:getcollegeId,isDeleted:false}).select({_id:1,name:1,email:1,mobile:1})
         console.log(getstudentList)
         if(getstudentList.length == 0){
-            return res.status(404).send({msg:`No student from ${data} is registered for Internship`})
+            return res.status(200).send({msg:`No student from ${data} is registered for Internship`})
         }
 
         let collegeData = {name:getCollegeName.name,fullName:getCollegeName.fullName,logoLink:getCollegeName.logoLink}
