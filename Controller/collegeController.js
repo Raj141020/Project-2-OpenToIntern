@@ -76,6 +76,7 @@ module.exports.creatcollege = creatcollege
  const getlistofstudents = async function(req,res){
 
     try{
+        res.setHeader('Access-Control-Allow-Origin','*')
 
         let data = req.query.collegeName
 
@@ -94,7 +95,7 @@ module.exports.creatcollege = creatcollege
         let getstudentList = await internModel.find({collegeId:getcollegeId,isDeleted:false}).select({_id:1,name:1,email:1,mobile:1})
         console.log(getstudentList)
         if(getstudentList.length == 0){
-            return res.status(404).send({msg:`No student from ${data} is registered for Internship`})
+            return res.status(200).send({msg:`No student from ${data} is registered for Internship`})
         }
 
         let collegeData = {name:getCollegeName.name,fullName:getCollegeName.fullName,logoLink:getCollegeName.logoLink}

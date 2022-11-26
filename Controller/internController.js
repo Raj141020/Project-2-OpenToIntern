@@ -8,10 +8,11 @@ const college = require("../Models/collegeModel");
 
 let { isEmpty, isValidStudentName, isValidEmail, isValidStudentMobile} = validation //Destructuring
 
-const createIntern = async function(req,res){ // Checking body is empty or not
+const createIntern = async function(req,res){ 
     try{
+        res.setHeader('Access-Control-Allow-Origin','*')
         let data = req.body
-    if(Object.keys(data).length==0){
+    if(Object.keys(data).length==0){// Checking body is empty or not
         return res.status(400).send({status:false,message:"Body is empty"})
     }
 
@@ -39,7 +40,7 @@ const createIntern = async function(req,res){ // Checking body is empty or not
 
 
     if(!isValidStudentName(name)){ // Student Name validation
-        return res.status(400).send({status:false,message:"fname is Wrong"})
+        return res.status(400).send({status:false,message:"Name is Wrong"})
     }
 
     if(!isValidEmail(email)){ // Student Email validation
