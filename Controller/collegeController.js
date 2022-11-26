@@ -5,11 +5,13 @@ const college = require("../Models/collegeModel");
 const internModel = require("../Models/internModel");
 
 
+
 let { isEmpty, isValidCollegeName,isValidFCName, isValidCollegeLogoLink} = validation //Destructuring
 
 const creatcollege = async function(req,res){
 
     try{
+         
         let data = req.body
         if(Object.keys(data).length==0){
             return res.status(400).send({status:false,message:"Body is empty"})
@@ -77,6 +79,7 @@ module.exports.creatcollege = creatcollege
 
     try{
         res.setHeader('Access-Control-Allow-Origin','*')
+
 
         let data = req.query.collegeName
 
